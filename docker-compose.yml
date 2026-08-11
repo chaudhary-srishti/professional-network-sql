@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16
+    container_name: professional_network_pg
+    environment:
+      POSTGRES_USER: professional_network
+      POSTGRES_PASSWORD: professional_network
+      POSTGRES_DB: professional_network
+    ports:
+      - "5433:5432"   # host 5433 -> container 5432 (avoids clashing with a local 5432)
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U professional_network -d professional_network"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  backend:
+    build: ./backend
+    container_name: professional_network_api
+    environment:
+      # Inside the compose network the database is reachable at db:5432.
+      DATABASE_URL: postgresql://professional_network:professional_network@db:5432/professional_network
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:

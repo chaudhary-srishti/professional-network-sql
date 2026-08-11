@@ -1,0 +1,20 @@
+# Python / venv
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+
+# Environment & lockfiles
+.env
+uv.lock
+
+# Test / tooling caches
+.pytest_cache/
+
+# Local editor / OS / agent config
+.claude/
+.DS_Store
+.idea/
+.vscode/
